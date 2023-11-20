@@ -1,4 +1,7 @@
 #! /usr/bin/perl -w
+
+# Source: 
+
 # nagios: -epn
 
 my %ERRORS=( OK => 0, WARNING => 1, CRITICAL => 2, UNKNOWN => 3 );
@@ -140,7 +143,7 @@ sub init {
   } elsif ($params{mode} =~ /server::instance::innodb::needoptimize/) {
 #fragmentation=$(($datafree * 100 / $datalength))
 
-#http://www.electrictoolbox.com/optimize-tables-mysql-php/
+# http://www.electrictoolbox.com/optimize-tables-mysql-php/
     my  @result = $self->{handle}->fetchall_array(q{
 SHOW TABLE STATUS WHERE Data_free / Data_length > 0.1 AND Data_free > 102400
 });

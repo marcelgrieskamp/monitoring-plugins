@@ -1,5 +1,8 @@
 #!/usr/bin/php
+
 <?php
+
+// Source: https://github.com/janvonde/check_nextcloud
 
 /***
  *

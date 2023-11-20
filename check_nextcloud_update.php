@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-# Source: https://github.com/cstegm/check_nextcloud_update
+// Source: https://github.com/cstegm/check_nextcloud_update
 
 # Changelog
 # 2018-08-05 added optional perfdata output ("-p" ) - doctore74 <doc@snowheaven.de>

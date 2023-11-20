@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-#Source: https://github.com/patrikskrivanek/icinga2-check_systemd_service/
+
+# Source: https://github.com/patrikskrivanek/icinga2-check_systemd_service/
 
 VERSION='v1.1.0'
 RELEASE_DATE='2019-08-13'

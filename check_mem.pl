@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 
+# Source: https://github.com/davidecostantini/nagios_plugins/blob/master/check_mem.pl
+
 # Heavily based on the script from:
 # check_mem.pl Copyright (C) 2000 Dan Larsson <dl@tyfon.net>
 # heavily modified by

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
+
 # Source: https://github.com/inuits/monitoring-plugins/blob/master/check_wireguard
+
 # Checks if the wireguard interface is present
 # Script is roughly based on Dave Simons' check_ipsec script.
 
