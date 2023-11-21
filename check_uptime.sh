@@ -108,7 +108,7 @@ if [ -x /usr/bin/bc ]; then
 else
 	RAW_DAYS=`expr 0$UPTIME_MINUTES \/ 1440`
 fi
-UPTIME_DAYS=`printf %3.4lf $RAW_DAYS`
+UPTIME_DAYS=`printf "%3.4f\n" $RAW_DAYS`
 UPTIME_MSG="${DAYS:+$DAYS Days,} ${HOURS:+$HOURS Hours,} $MINUTES Minutes"
 PERFDATA="|Uptime=$UPTIME_DAYS;$MIN_WARNING:$MAX_WARNING;$MIN_CRITICAL:$MAX_CRITICAL;0;"
 if [ $MIN_CRITICAL ] && [ $UPTIME_MINUTES -lt $MIN_CRITICAL ] ; then
