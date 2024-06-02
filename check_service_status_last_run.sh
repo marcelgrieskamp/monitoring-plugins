@@ -6,6 +6,29 @@ WARNING=1
 CRITICAL=2
 UNKNOWN=3
 
+# Function to display usage information
+usage() {
+	echo "Usage: ${0} -s <service>"
+	exit 3 # Exit with UNKNOWN status
+}
+
+# Parse command line options
+while getopts ":s:" opt; do
+	case ${opt} in
+	s)
+		SERVICE="${OPTARG}"
+		;;
+	\?)
+		echo "Invalid option: -${OPTARG}"
+		usage
+		;;
+	:)
+		echo "Option -${OPTARG} requires an argument."
+		usage
+		;;
+	esac
+done
+
 # Get exit code of the service
 SERVICE_EXIT_CODE=$(systemctl show -p ExecMainStatus --value ${SERVICE})
 
