@@ -18,7 +18,7 @@ main() {
     trap "echo 'ERROR - An error has occurred.'; exit 2" ERR
 
     # check for sudo:
-    sudo /usr/bin/docker images -aq --no-trunc '*'
+    sudo /usr/bin/docker images -aq --no-trunc '*' >> /dev/null
 
     # Update Images
     for IMAGE in $(sudo docker images -q || exit 3); do
