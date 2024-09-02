@@ -52,15 +52,15 @@ main() {
         IMG_LATEST=$(sudo docker images -aq --no-trunc $REPO)
 
         if [ "$IMG_RUNNING" != "$IMG_LATEST" ]; then
-            if [ "${UPD-}" != "-" ]; then
+            if [ -n "$UPD" ]; then
                 UPD="${UPD}, ${NAME}"
             else
-                UPD=${NAME}
+                UPD="${NAME}"
             fi
         fi
     done
 
-    if [ "$UPD" ]; then
+    if [ -n "$UPD" ]; then
         echo "WARNING - Update available for these containers:"
         echo "${UPD}"
         exit 1
