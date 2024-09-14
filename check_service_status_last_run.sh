@@ -49,11 +49,11 @@ fi
 
 case "$SERVICE_EXIT_CODE" in
     0)
-        echo "OK - Backup completed"
+        echo "OK - Service completed"
         exit "${OK}"
         ;;
     1)
-        echo "CRITICAL - Backup failed"
+        echo "CRITICAL - Service failed"
         exit "${CRITICAL}"
         ;;
     2)
