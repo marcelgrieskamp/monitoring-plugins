@@ -14,6 +14,22 @@ set -o pipefail
 # nagios ALL=NOPASSWD: /usr/bin/docker inspect --format *
 # nagios ALL=NOPASSWD: /usr/bin/docker images -aq --no-trunc *
 
+
+remove_prefix_if_domain_exists() {
+    url="$1"
+    # Check for pattern *.* before the first /
+    if [[ $url =~ ^[^/]*\.[a-zA-Z]{2,} ]]; then
+        parts=(${url//\// })
+        if [ ${#parts[@]} -gt 1 ]; then
+            echo "${url#*/}"
+        else
+            echo ""
+        fi
+    else
+        echo "$url"
+    fi
+}
+
 main() {
     trap "echo 'ERROR - An error has occurred.'; exit 2" ERR
 
@@ -51,8 +67,8 @@ main() {
         NAME=$(sudo docker inspect --format '{{.Name}}' $CONTAINER | sed "s/\///g")
         REPO=$(sudo docker inspect --format '{{.Config.Image}}' $CONTAINER)
 
-        # Remove the domain part if it exists, keep netboxcommunity/ intact
-        REPO=$(echo $REPO | sed -E 's|^[^/]+/([^/]+/.*)|\1|')
+        # Remove the domain part if it exists.
+        REPO=$(remove_prefix_if_domain_exists "$REPO")
 
         IMG_RUNNING=$(sudo docker inspect --format '{{.Image}}' $CONTAINER)
         IMG_LATEST=$(sudo docker images -aq --no-trunc $REPO)
