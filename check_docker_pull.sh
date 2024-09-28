@@ -23,6 +23,7 @@ main() {
     # Update Images
     for IMAGE in $(sudo docker images -q || exit 3); do
         REPO=$(sudo docker inspect --format "{{.RepoTags}}" $IMAGE | sed "s/\[//g" | sed "s/\]//g")
+
         if [ -z "$REPO" ]; then
             echo "ERROR - Repository name not found for image $IMAGE. Exiting..."
             exit 2
@@ -30,16 +31,18 @@ main() {
 
         REPO_NAME=$(echo $REPO | cut -d':' -f1)
         REPO_TAG=$(echo $REPO | cut -d':' -f2)
+
         if [ -z "$REPO_TAG" ]; then
             echo "ERROR - Repository tag not found for image $IMAGE. Exiting..."
             exit 2
         fi
 
+        # Pull the updated image
         sudo docker pull $REPO_NAME:$REPO_TAG > /dev/null 2>&1
     done
 
-    # wait until all subprocesses finished:
-    while [ $(pgrep -c -P$$) -gt 0 ]; do
+    # Wait until all subprocesses finish:
+    while [ $(pgrep -c -P$$) -gt 0; do
         sleep 1
     done
 
@@ -47,6 +50,9 @@ main() {
     for CONTAINER in $(sudo docker ps -qa); do
         NAME=$(sudo docker inspect --format '{{.Name}}' $CONTAINER | sed "s/\///g")
         REPO=$(sudo docker inspect --format '{{.Config.Image}}' $CONTAINER)
+
+        # Remove the domain part if it exists, keep netboxcommunity/ intact
+        REPO=$(echo $REPO | sed -E 's|^[^/]+/([^/]+/.*)|\1|')
 
         IMG_RUNNING=$(sudo docker inspect --format '{{.Image}}' $CONTAINER)
         IMG_LATEST=$(sudo docker images -aq --no-trunc $REPO)
