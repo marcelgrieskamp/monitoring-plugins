@@ -58,7 +58,7 @@ main() {
     done
 
     # Wait until all subprocesses finish:
-    while [ $(pgrep -c -P$$) -gt 0; do
+    while [ $(pgrep -c -P$$) -gt 0 ]; do
         sleep 1
     done
 
