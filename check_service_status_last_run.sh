@@ -29,23 +29,30 @@ while getopts ":s:" opt; do
 	esac
 done
 
-# Get exit code of the service
-SERVICE_EXIT_CODE=$(systemctl show -p ExecMainStatus --value ${SERVICE})
+# Check that service exists
+if systemctl list-unit-files --type=service --all | grep -q "^${SERVICE}.service"
+then
+    # Get exit code of the service
+    SERVICE_EXIT_CODE=$(systemctl show -p ExecMainStatus --value ${SERVICE})
 
-# Get the last start time of the service
-LAST_START=$(systemctl show -p ActiveEnterTimestamp --value ${SERVICE})
+    # Get the last start time of the service
+    LAST_START=$(systemctl show -p ActiveEnterTimestamp --value ${SERVICE})
 
-# Get the current time and the time 24 hours ago
-CURRENT_TIME=$(date +%s)
-TIME_24_HOURS_AGO=$(date -d '24 hours ago' +%s)
+    # Get the current time and the time 24 hours ago
+    CURRENT_TIME=$(date +%s)
+    TIME_24_HOURS_AGO=$(date -d '24 hours ago' +%s)
 
-# Convert the last start time to a timestamp
-LAST_START_TIMESTAMP=$(date -d "$LAST_START" +%s)
+    # Convert the last start time to a timestamp
+    LAST_START_TIMESTAMP=$(date -d "$LAST_START" +%s)
 
-# Check if the service has run in the last 24 hours
-if [ "$LAST_START_TIMESTAMP" -lt "$TIME_24_HOURS_AGO" ]; then
+    # Check if the service has run in the last 24 hours
+    if [ "$LAST_START_TIMESTAMP" -lt "$TIME_24_HOURS_AGO" ]; then
     SERVICE_EXIT_CODE=1
+    fi
+else
+    SERVICE_EXIT_CODE=2
 fi
+
 
 case "$SERVICE_EXIT_CODE" in
     0)
@@ -57,7 +64,7 @@ case "$SERVICE_EXIT_CODE" in
         exit "${CRITICAL}"
         ;;
     2)
-        echo "WARNING - "
+        echo "WARNING - Service does not exist"
         exit "${WARNING}"
         ;;
     *)
