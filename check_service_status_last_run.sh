@@ -30,7 +30,7 @@ while getopts ":s:" opt; do
 done
 
 # Check that service exists
-if systemctl list-unit-files --type=service --all | grep -q "^${SERVICE}.service"
+if systemctl list-unit-files --type=service --all | grep -q "^${SERVICE}"
 then
     # Get exit code of the service
     SERVICE_EXIT_CODE=$(systemctl show -p ExecMainStatus --value ${SERVICE})
