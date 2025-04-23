@@ -50,7 +50,7 @@ then
     SERVICE_EXIT_CODE=1
     fi
 else
-    SERVICE_EXIT_CODE=2
+    SERVICE_EXIT_CODE=3
 fi
 
 
@@ -64,11 +64,11 @@ case "$SERVICE_EXIT_CODE" in
         exit "${CRITICAL}"
         ;;
     2)
-        echo "WARNING - Service does not exist"
+        echo "WARNING -"
         exit "${WARNING}"
         ;;
     *)
-        echo "UNKNOWN - No registered exit code"
+        echo "UNKNOWN - Service does not exist"
         exit "${UNKNOWN}"
         ;;
 esac
