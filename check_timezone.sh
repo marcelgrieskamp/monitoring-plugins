@@ -36,7 +36,7 @@ if [[ -z ${TIMEZONE} ]]; then
 fi
 
 
-SET_TIMEZONE=$(timedatectl -p "Timezone" --value)
+SET_TIMEZONE=$(timedatectl show -p "Timezone" --value)
 
 if [ "$SET_TIMEZONE" = "$TIMEZONE" ]; then
     echo "OK - Timezone matches $TIMEZONE"
