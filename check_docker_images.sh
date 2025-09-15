@@ -48,10 +48,10 @@ if [ "$CRITICAL_THRESHOLD" -lt "$WARNING_THRESHOLD" ]; then
 fi
 
 # Get all Docker images (including dangling images)
-ALL_IMAGES=$(docker images --format "{{.Repository}}:{{.Tag}}")
+ALL_IMAGES=$(sudo docker images --format "{{.Repository}}:{{.Tag}}")
 
 # Get images currently in use by containers (running and stopped)
-USED_IMAGES=$(docker ps -a --format "{{.Image}}")
+USED_IMAGES=$(sudo docker ps -a --format "{{.Image}}")
 
 # Count total images
 TOTAL_IMAGES=$(echo "$ALL_IMAGES" | wc -l)
