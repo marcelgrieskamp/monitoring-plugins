@@ -48,7 +48,7 @@ if [ "$CRITICAL_THRESHOLD" -lt "$WARNING_THRESHOLD" ]; then
 fi
 
 # Get all Docker images (including dangling images)
-ALL_IMAGES=$(sudo docker images --format "{{.Repository}}:{{.Tag}}")
+ALL_IMAGES=$(sudo docker images --format "{{.Repository}}:{{.Tag}}" | sed 's/:$//')
 
 # Get images currently in use by containers (running and stopped)
 USED_IMAGES=$(sudo docker ps -a --format "{{.Image}}")
@@ -87,12 +87,10 @@ while IFS= read -r image; do
         done <<< "$USED_IMAGES"
         
         if [ "$IS_USED" = false ]; then
-            # Clean up image name - remove trailing colon if present
-            CLEAN_IMAGE=$(echo "$image" | sed 's/:$//')
             if [ -z "$UNUSED_IMAGES_LIST" ]; then
-                UNUSED_IMAGES_LIST="$CLEAN_IMAGE"
+                UNUSED_IMAGES_LIST="$image"
             else
-                UNUSED_IMAGES_LIST="$UNUSED_IMAGES_LIST"$'\n'"$CLEAN_IMAGE"
+                UNUSED_IMAGES_LIST="$UNUSED_IMAGES_LIST"$'\n'"$image"
             fi
             ((UNUSED_COUNT++))
         fi
