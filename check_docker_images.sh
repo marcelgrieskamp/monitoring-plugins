@@ -87,8 +87,8 @@ while IFS= read -r image; do
         done <<< "$USED_IMAGES"
         
         if [ "$IS_USED" = false ]; then
-            # Remove trailing colon if present
-            CLEAN_IMAGE=$(echo "$image" | sed 's/:$//')
+            # Remove any colon at the end
+            CLEAN_IMAGE=$(echo "$image" | sed 's/:$//' | sed 's/[: ]*$//')
             if [ -z "$UNUSED_IMAGES_LIST" ]; then
                 UNUSED_IMAGES_LIST="$CLEAN_IMAGE"
             else
