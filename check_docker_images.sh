@@ -87,12 +87,10 @@ while IFS= read -r image; do
         done <<< "$USED_IMAGES"
         
         if [ "$IS_USED" = false ]; then
-            # Clean up image name - remove trailing colon if present
-            CLEAN_IMAGE=$(echo "$image" | sed 's/:$//')
             if [ -z "$UNUSED_IMAGES_LIST" ]; then
-                UNUSED_IMAGES_LIST="$CLEAN_IMAGE"
+                UNUSED_IMAGES_LIST="$image"
             else
-                UNUSED_IMAGES_LIST="$UNUSED_IMAGES_LIST"$'\n'"$CLEAN_IMAGE"
+                UNUSED_IMAGES_LIST="$UNUSED_IMAGES_LIST"$'\n'"$image"
             fi
             ((UNUSED_COUNT++))
         fi
@@ -106,7 +104,7 @@ if [ "$UNUSED_IMAGES" -ge "$CRITICAL_THRESHOLD" ]; then
     echo "CRITICAL - Unused images: $UNUSED_IMAGES | unused_images=$UNUSED_IMAGES;$WARNING_THRESHOLD;$CRITICAL_THRESHOLD;0;$TOTAL_IMAGES"
     
     if [ "$UNUSED_IMAGES" -gt 0 ]; then
-        echo "$UNUSED_IMAGES_LIST"
+        echo "$UNUSED_IMAGES_LIST" | sed 's/:$//'
     fi
     
     exit $CRITICAL
@@ -114,7 +112,7 @@ elif [ "$UNUSED_IMAGES" -ge "$WARNING_THRESHOLD" ]; then
     echo "WARNING - Unused images: $UNUSED_IMAGES | unused_images=$UNUSED_IMAGES;$WARNING_THRESHOLD;$CRITICAL_THRESHOLD;0;$TOTAL_IMAGES"
     
     if [ "$UNUSED_IMAGES" -gt 0 ]; then
-        echo "$UNUSED_IMAGES_LIST"
+        echo "$UNUSED_IMAGES_LIST" | sed 's/:$//'
     fi
     
     exit $WARNING
