@@ -48,7 +48,15 @@ if [ "$CRITICAL_THRESHOLD" -lt "$WARNING_THRESHOLD" ]; then
 fi
 
 # Get all Docker images (including dangling images)
-ALL_IMAGES=$(sudo docker images --format "{{.Repository}}:{{.Tag}}" | sed 's/:$//')
+ALL_IMAGES=$(sudo docker images --format "table {{.Repository}}\t{{.Tag}}" | tail -n +2 | while read repo tag; do
+    if [ "$repo" = "<none>" ]; then
+        echo "<none>:<none>"
+    elif [ "$tag" = "<none>" ]; then
+        echo "$repo"
+    else
+        echo "$repo:$tag"
+    fi
+done)
 
 # Get images currently in use by containers (running and stopped)
 USED_IMAGES=$(sudo docker ps -a --format "{{.Image}}")
