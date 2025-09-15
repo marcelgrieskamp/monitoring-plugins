@@ -62,11 +62,6 @@ UNUSED_COUNT=0
 
 while IFS= read -r image; do
     if [ -n "$image" ]; then
-        # Skip empty lines and clean up the image name
-        if [ "$image" = ":" ] || [ -z "$image" ]; then
-            continue
-        fi
-        
         # Check if this image is NOT used by any container
         IS_USED=false
         while IFS= read -r used_image; do
@@ -92,10 +87,12 @@ while IFS= read -r image; do
         done <<< "$USED_IMAGES"
         
         if [ "$IS_USED" = false ]; then
+            # Clean up image name - remove trailing colon if present
+            CLEAN_IMAGE=$(echo "$image" | sed 's/:$//')
             if [ -z "$UNUSED_IMAGES_LIST" ]; then
-                UNUSED_IMAGES_LIST="$image"
+                UNUSED_IMAGES_LIST="$CLEAN_IMAGE"
             else
-                UNUSED_IMAGES_LIST="$UNUSED_IMAGES_LIST"$'\n'"$image"
+                UNUSED_IMAGES_LIST="$UNUSED_IMAGES_LIST"$'\n'"$CLEAN_IMAGE"
             fi
             ((UNUSED_COUNT++))
         fi
