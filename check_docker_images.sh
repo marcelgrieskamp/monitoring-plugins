@@ -62,6 +62,11 @@ UNUSED_COUNT=0
 
 while IFS= read -r image; do
     if [ -n "$image" ]; then
+        # Skip empty lines and clean up the image name
+        if [ "$image" = ":" ] || [ -z "$image" ]; then
+            continue
+        fi
+        
         # Check if this image is NOT used by any container
         IS_USED=false
         while IFS= read -r used_image; do
@@ -101,7 +106,7 @@ UNUSED_IMAGES=$UNUSED_COUNT
 
 # Determine status and exit
 if [ "$UNUSED_IMAGES" -ge "$CRITICAL_THRESHOLD" ]; then
-    echo "DOCKER_IMAGE_MONITOR CRITICAL - Unused images: $UNUSED_IMAGES | unused_images=$UNUSED_IMAGES;$WARNING_THRESHOLD;$CRITICAL_THRESHOLD;0;$TOTAL_IMAGES"
+    echo "CRITICAL - Unused images: $UNUSED_IMAGES | unused_images=$UNUSED_IMAGES;$WARNING_THRESHOLD;$CRITICAL_THRESHOLD;0;$TOTAL_IMAGES"
     
     if [ "$UNUSED_IMAGES" -gt 0 ]; then
         echo "$UNUSED_IMAGES_LIST"
@@ -109,7 +114,7 @@ if [ "$UNUSED_IMAGES" -ge "$CRITICAL_THRESHOLD" ]; then
     
     exit $CRITICAL
 elif [ "$UNUSED_IMAGES" -ge "$WARNING_THRESHOLD" ]; then
-    echo "DOCKER_IMAGE_MONITOR WARNING - Unused images: $UNUSED_IMAGES | unused_images=$UNUSED_IMAGES;$WARNING_THRESHOLD;$CRITICAL_THRESHOLD;0;$TOTAL_IMAGES"
+    echo "WARNING - Unused images: $UNUSED_IMAGES | unused_images=$UNUSED_IMAGES;$WARNING_THRESHOLD;$CRITICAL_THRESHOLD;0;$TOTAL_IMAGES"
     
     if [ "$UNUSED_IMAGES" -gt 0 ]; then
         echo "$UNUSED_IMAGES_LIST"
@@ -117,6 +122,6 @@ elif [ "$UNUSED_IMAGES" -ge "$WARNING_THRESHOLD" ]; then
     
     exit $WARNING
 else
-    echo "DOCKER_IMAGE_MONITOR OK - Unused images: $UNUSED_IMAGES | unused_images=$UNUSED_IMAGES;$WARNING_THRESHOLD;$CRITICAL_THRESHOLD;0;$TOTAL_IMAGES"
+    echo "OK - Unused images: $UNUSED_IMAGES | unused_images=$UNUSED_IMAGES;$WARNING_THRESHOLD;$CRITICAL_THRESHOLD;0;$TOTAL_IMAGES"
     exit $OK
 fi
